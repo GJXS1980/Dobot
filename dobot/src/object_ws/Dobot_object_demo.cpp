@@ -1,4 +1,7 @@
 #include "ros/ros.h"
+#include "ros/console.h"
+#include <unistd.h>
+
 #include "std_msgs/String.h"
 #include "dobot/SetCmdTimeout.h"
 #include "dobot/SetQueuedCmdClear.h"
@@ -12,6 +15,8 @@
 #include "dobot/SetPTPJumpParams.h"
 #include "dobot/SetPTPCommonParams.h"
 #include "dobot/SetPTPCmd.h"
+
+#include "dobot/SetEndEffectorSuctionCup.h"
 
 int main(int argc, char **argv)
 {
@@ -103,10 +108,25 @@ int main(int argc, char **argv)
         client.call(srv);
     } while (0);
 
-    client = n.serviceClient<dobot::SetPTPCmd>("/DobotServer/SetPTPCmd");
-    dobot::SetPTPCmd srv;
+
+
 
     while (ros::ok()) {
+
+/**
+        client = n.serviceClient<dobot::SetEndEffectorSuctionCup>("/DobotServer/SetEndEffectorSuctionCup");
+        dobot::SetEndEffectorSuctionCup sck1;   
+        do{
+            sck1.request.enableCtrl = 1; // When enableCtr == 1 the motor will operate. 
+            sck1.request.suck = 1; // When suck == 1 the suction cup will suck.
+            sck1.request.isQueued = true; // This command puts the request in the queue.
+            ros::spinOnce(); 
+        } while(0);
+
+*/
+        client = n.serviceClient<dobot::SetPTPCmd>("/DobotServer/SetPTPCmd");
+        dobot::SetPTPCmd srv;
+
         // The first point
         do {
             srv.request.ptpMode = 1;
@@ -122,10 +142,88 @@ int main(int argc, char **argv)
             if (ros::ok() == false) {
                 break;
             }
-        } while (1);
+        } while (0);
+
+
+
+
+        // The first point
+        do {
+            srv.request.ptpMode = 1;
+            srv.request.x = 244.7;
+            srv.request.y = -25;
+            srv.request.z = -35;
+            srv.request.r = 0;
+            client.call(srv);
+            if (srv.response.result == 0) {
+                break;
+            }     
+            ros::spinOnce();
+            if (ros::ok() == false) {
+                break;
+            }
+        } while (0);
+
+
+        // ************************** pick up **************************
+        client = n.serviceClient<dobot::SetEndEffectorSuctionCup>("/DobotServer/SetEndEffectorSuctionCup");
+        dobot::SetEndEffectorSuctionCup sck2;
+        // pick up 
+        do{
+            sck2.request.enableCtrl = 1;
+            sck2.request.suck = 1; // Enable suction 
+            sck2.request.isQueued = true;
+            client.call(sck2);
+ 
+            ros::spinOnce(); //spinOnce() will execute any commands in the queue.
+            if (ros::ok() == false) {
+                break;
+            }
+        } while(0);
+
+        client = n.serviceClient<dobot::SetPTPCmd>("/DobotServer/SetPTPCmd");
+        dobot::SetPTPCmd srv1;
+
+        // The first point
+        do {
+            srv1.request.ptpMode = 1;
+            srv1.request.x = 195;
+            srv1.request.y = 0;
+            srv1.request.z = 80;
+            srv1.request.r = 0;
+            client.call(srv1);
+            if (srv1.response.result == 0) {
+                break;
+            }     
+            ros::spinOnce();
+            if (ros::ok() == false) {
+                break;
+            }
+        } while (0);
+
+
+
+
+        // ************************** drop off **************************
+        client = n.serviceClient<dobot::SetEndEffectorSuctionCup>("/DobotServer/SetEndEffectorSuctionCup");
+        dobot::SetEndEffectorSuctionCup sck3;
+        //drop off 
+        do{    
+            sck3.request.enableCtrl = 1;
+            sck3.request.suck = 0;
+            sck3.request.isQueued = true;
+            client.call(sck3);
+ 
+            ros::spinOnce(); //spinOnce() will execute any commands in the queue.
+            if (ros::ok() == false) {
+                break;
+            }
+        }while (0);
+
+
         //ros::spinOnce();
+    return 0;
     }
 
-    return 0;
 }
 

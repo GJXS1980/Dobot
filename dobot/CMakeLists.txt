@@ -262,6 +262,10 @@ add_executable(DobotClient_Initialization src/object_ws/DobotClient_Initializati
 target_link_libraries(DobotClient_Initialization ${catkin_LIBRARIES})
 add_dependencies(DobotClient_Initialization dobot_gencpp)
 
+add_executable(Dobot_object_demo src/object_ws/Dobot_object_demo.cpp)
+target_link_libraries(Dobot_object_demo ${catkin_LIBRARIES})
+add_dependencies(Dobot_object_demo dobot_gencpp)
+
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}

@@ -110,9 +110,9 @@ int main(int argc, char **argv)
         // The first point
         do {
             srv.request.ptpMode = 1;
-            srv.request.x = 195;
-            srv.request.y = 0;
-            srv.request.z = 80;
+            srv.request.x = 244.7;
+            srv.request.y = -25;
+            srv.request.z = -35;
             srv.request.r = 0;
             client.call(srv);
             if (srv.response.result == 0) {
