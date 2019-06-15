@@ -1,19 +1,22 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(dobot)
+project(object_detect)
 
-## Add support for C++11, supported in ROS Kinetic and newer
-# add_definitions(-std=c++11)
+## Compile as C++11, supported in ROS Kinetic and newer
+# add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  cv_bridge
+  image_transport
+  sensor_msgs
+  actionlib
+  actionlib_msgs
+  message_generation
   roscpp
   rospy
   std_msgs
-  message_generation
-  genmsg
-  geometry_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -35,10 +38,10 @@ find_package(catkin REQUIRED COMPONENTS
 ##   your messages/services/actions (e.g. std_msgs, actionlib_msgs, ...).
 ## * In the file package.xml:
 ##   * add a build_depend tag for "message_generation"
-##   * add a build_depend and a run_depend tag for each package in MSG_DEP_SET
+##   * add a build_depend and a exec_depend tag for each package in MSG_DEP_SET
 ##   * If MSG_DEP_SET isn't empty the following dependency has been pulled in
 ##     but can be declared for certainty nonetheless:
-##     * add a run_depend tag for "message_runtime"
+##     * add a exec_depend tag for "message_runtime"
 ## * In this file (CMakeLists.txt):
 ##   * add "message_generation" and every package in MSG_DEP_SET to
 ##     find_package(catkin REQUIRED COMPONENTS ...)
@@ -50,89 +53,16 @@ find_package(catkin REQUIRED COMPONENTS
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-add_message_files(
-  FILES
-)
+ add_message_files(
+   FILES
+   Center_msg.msg
+ )
 
 ## Generate services in the 'srv' folder
-add_service_files(
-  FILES
-  SetCmdTimeout.srv
-
-  GetDeviceSN.srv
-  SetDeviceName.srv
-  GetDeviceName.srv
-  GetDeviceVersion.srv
-
-  GetPose.srv
-
-  GetAlarmsState.srv
-  ClearAllAlarmsState.srv
-
-  SetHOMEParams.srv
-  GetHOMEParams.srv
-  SetHOMECmd.srv
-
-  SetEndEffectorParams.srv
-  GetEndEffectorParams.srv
-  SetEndEffectorLaser.srv
-  GetEndEffectorLaser.srv
-  SetEndEffectorSuctionCup.srv
-  GetEndEffectorSuctionCup.srv
-  SetEndEffectorGripper.srv
-  GetEndEffectorGripper.srv
-
-  SetJOGJointParams.srv
-  GetJOGJointParams.srv
-  SetJOGCoordinateParams.srv
-  GetJOGCoordinateParams.srv
-  SetJOGCommonParams.srv
-  GetJOGCommonParams.srv
-  SetJOGCmd.srv
-
-  SetPTPJointParams.srv
-  GetPTPJointParams.srv
-  SetPTPCoordinateParams.srv
-  GetPTPCoordinateParams.srv
-  SetPTPJumpParams.srv
-  GetPTPJumpParams.srv
-  SetPTPCommonParams.srv
-  GetPTPCommonParams.srv
-  SetPTPCmd.srv
-
-  SetCPParams.srv
-  GetCPParams.srv
-  SetCPCmd.srv
-
-  SetARCParams.srv
-  GetARCParams.srv
-  SetARCCmd.srv
-
-  SetWAITCmd.srv
-
-  SetTRIGCmd.srv
-
-  SetIOMultiplexing.srv
-  GetIOMultiplexing.srv
-  SetIODO.srv
-  GetIODO.srv
-  SetIOPWM.srv
-  GetIOPWM.srv
-  GetIODI.srv
-  GetIOADC.srv
-  SetEMotor.srv
-  GetInfraredSensor.srv
-  SetInfraredSensor.srv
-  
-  SetColorSensor.srv
-  GetColorSensor.srv
-
-  SetQueuedCmdStartExec.srv
-  SetQueuedCmdStopExec.srv
-  SetQueuedCmdForceStopExec.srv
-  SetQueuedCmdClear.srv
-  
-)
+ add_service_files(
+   FILES
+   Center.srv
+ )
 
 ## Generate actions in the 'action' folder
 # add_action_files(
@@ -142,11 +72,10 @@ add_service_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-)
-
+ generate_messages(
+   DEPENDENCIES
+   std_msgs
+ )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -155,7 +84,7 @@ generate_messages(
 ## To declare and build dynamic reconfigure parameters within this
 ## package, follow these steps:
 ## * In the file package.xml:
-##   * add a build_depend and a run_depend tag for "dynamic_reconfigure"
+##   * add a build_depend and a exec_depend tag for "dynamic_reconfigure"
 ## * In this file (CMakeLists.txt):
 ##   * add "dynamic_reconfigure" to
 ##     find_package(catkin REQUIRED COMPONENTS ...)
@@ -173,14 +102,14 @@ generate_messages(
 ###################################
 ## The catkin_package macro generates cmake config files for your package
 ## Declare things to be passed to dependent projects
-## INCLUDE_DIRS: uncomment this if you package contains header files
+## INCLUDE_DIRS: uncomment this if your package contains header files
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 #  INCLUDE_DIRS include
-#  LIBRARIES dobot
-CATKIN_DEPENDS roscpp rospy std_msgs message_runtime geometry_msgs
+#  LIBRARIES object_detect
+#  CATKIN_DEPENDS roscpp rospy std_msgs
 #  DEPENDS system_lib
 )
 
@@ -190,90 +119,22 @@ CATKIN_DEPENDS roscpp rospy std_msgs message_runtime geometry_msgs
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-# include_directories(include)
-
-if (CMAKE_SIZEOF_VOID_P EQUAL 4)
-    include_directories(
-      ${catkin_INCLUDE_DIRS}
-      src/DobotDll_x86
-    )
-
-    link_directories(
-      src/DobotDll_x86
-    )
-else()
-    include_directories(
-      ${catkin_INCLUDE_DIRS}
-      src/DobotDll_x64
-    )
-
-    link_directories(
-      src/DobotDll_x64
-    )
-endif()
-
-
-
-add_executable(DobotServer src/DobotServer.cpp)
-target_link_libraries(DobotServer ${catkin_LIBRARIES} DobotDll)
-add_dependencies(DobotServer dobot_gencpp)
-
-add_executable(DobotClient_JOG src/DobotClient_JOG.cpp)
-target_link_libraries(DobotClient_JOG ${catkin_LIBRARIES})
-add_dependencies(DobotClient_JOG dobot_gencpp)
-
-add_executable(DobotClient_PTP src/DobotClient_PTP.cpp)
-target_link_libraries(DobotClient_PTP ${catkin_LIBRARIES})
-add_dependencies(DobotClient_PTP dobot_gencpp)
-
-add_executable(DobotClient_Cir src/DobotClient_Cir.cpp)
-target_link_libraries(DobotClient_Cir ${catkin_LIBRARIES})
-add_dependencies(DobotClient_Cir dobot_gencpp)
-
-add_executable(DobotClient_GetPose src/DobotClient_Getpose.cpp)
-target_link_libraries(DobotClient_GetPose ${catkin_LIBRARIES})
-add_dependencies(DobotClient_GetPose dobot_gencpp)
-
-add_executable(DobotClient_JoyCtrl src/DobotClient_JoyCtrl.cpp)
-target_link_libraries(DobotClient_JoyCtrl ${catkin_LIBRARIES})
-add_dependencies(DobotClient_JoyCtrl dobot_gencpp)
-
-add_executable(JointTrajectory_subscriber src/JointTrajectory_subscriber.cpp)
-target_link_libraries(JointTrajectory_subscriber ${catkin_LIBRARIES})
-add_dependencies(JointTrajectory_subscriber dobot_gencpp)
-
-add_executable(DobotClient_Returnzero src/DobotClient_Returnzero.cpp)
-target_link_libraries(DobotClient_Returnzero ${catkin_LIBRARIES})
-add_dependencies(DobotClient_Returnzero dobot_gencpp)
-
-add_executable(DobotClient_Squre src/DobotClient_Squre.cpp)
-target_link_libraries(DobotClient_Squre ${catkin_LIBRARIES})
-add_dependencies(DobotClient_Squre dobot_gencpp)
-
-add_executable(DobotClient_Sucker src/DobotClient_Sucker.cpp)
-target_link_libraries(DobotClient_Sucker ${catkin_LIBRARIES})
-add_dependencies(DobotClient_Sucker dobot_gencpp)
-
-add_executable(DobotClient_Sucker_demo src/DobotClient_Sucker_demo.cpp)
-target_link_libraries(DobotClient_Sucker_demo ${catkin_LIBRARIES})
-add_dependencies(DobotClient_Sucker_demo dobot_gencpp)
-
-add_executable(DobotClient_Initialization src/object_ws/DobotClient_Initialization.cpp)
-target_link_libraries(DobotClient_Initialization ${catkin_LIBRARIES})
-add_dependencies(DobotClient_Initialization dobot_gencpp)
-
-add_executable(Dobot_object_demo src/object_ws/Dobot_object_demo.cpp)
-target_link_libraries(Dobot_object_demo ${catkin_LIBRARIES})
-add_dependencies(Dobot_object_demo dobot_gencpp)
-
-add_executable(Dobot_object_fin src/object_ws/Dobot_object_fin.cpp)
-target_link_libraries(Dobot_object_fin ${catkin_LIBRARIES})
-add_dependencies(Dobot_object_fin dobot_gencpp)
+include_directories(
+ include
+  ${catkin_INCLUDE_DIRS}
+)
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/dobot.cpp
+#   src/${PROJECT_NAME}/object_detect.cpp
 # )
+
+
+add_executable(robot_action src/robot_action.cpp)
+target_link_libraries(robot_action ${catkin_LIBRARIES})
+add_dependencies(robot_action robot_action_gencpp)
+
+
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -283,7 +144,7 @@ add_dependencies(Dobot_object_fin dobot_gencpp)
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/dobot_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/object_detect_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -340,7 +201,7 @@ add_dependencies(Dobot_object_fin dobot_gencpp)
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_dobot.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_object_detect.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

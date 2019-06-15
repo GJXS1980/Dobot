@@ -26,13 +26,33 @@
  
 using namespace std;
 
-// 接收到订阅的消息后，会进入消息回调函数
-void chatterCallback(const object_detect::Center_msg::ConstPtr& msg)
+class Listener
 {
-  // 将接收到的消息打印出来
-  ROS_INFO("x1: [%f]", msg->data[0]);
-  ROS_INFO("y1: [%f]", msg->data[1]);
+public:
+  int count = 0;
+  float x1 = 0, y1 = 0;
+public:
+  void callback(const object_detect::Center_msg::ConstPtr& msg);
+  int print_datax()
+  {
 
+  return x1;
+  }
+  int print_datay()
+  {
+
+  return y1;
+  }
+};
+
+
+void Listener::callback(const object_detect::Center_msg::ConstPtr& msg)
+{
+  x1 = msg->data[0];
+  y1 = msg->data[1];
+  print_datax();
+  print_datay();
+  ++count;
 }
 
 
@@ -40,6 +60,9 @@ void chatterCallback(const object_detect::Center_msg::ConstPtr& msg)
 
 int main(int argc, char **argv)
 {
+    float sx = 0, sy = 0;
+    float x = 195, y = 0;
+
     ros::init(argc, argv, "DobotClient");
     ros::NodeHandle n;
 
@@ -168,29 +191,31 @@ int main(int argc, char **argv)
 
         // 启动物体识别
         do {
-            srv.request.ptpMode = 1;
-            srv.request.x = 195;
-            srv.request.y = 0;
-            srv.request.z = 80;
-            srv.request.r = 0;
-            client.call(srv);
-            if (srv.response.result == 0) {
-                break;
-            }     
-            ros::spinOnce();
-            if (ros::ok() == false) {
-                break;
+
+            Listener listener;
+            ros::Subscriber sub = n.subscribe("chatter", 1000, &Listener::callback, &listener);
+            ros::Rate loop_rate(10);
+
+            while(ros::ok() and listener.count <=2){
+                ros::spinOnce();
+                loop_rate.sleep();
             }
-        } while (0);
+  //std::cout << "After spin: \n";
+            sx = listener.print_datax();
+            sy = listener.print_datay();
 
-
+            std::cout << sx << "\n";
+            std::cout << sy << "\n";
+            } while (0);
 
 
         // 机械臂运动到物体中心位置
         do {
+            x = (239.5 - sy)/4.7091 + 44.1 + 195;
+            y = (319.5 - sx)/4.7091;
             srv.request.ptpMode = 1;
-            srv.request.x = 244.7;
-            srv.request.y = -25;
+            srv.request.x = x;
+            srv.request.y = y;
             srv.request.z = -35;
             srv.request.r = 0;
             client.call(srv);
