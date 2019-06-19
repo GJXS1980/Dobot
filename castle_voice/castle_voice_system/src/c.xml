@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?><nlp>
+  <version>1.1</version>
+  <rawtext>紫物体</rawtext>
+  <confidence>42</confidence>
+  <engine>local</engine>
+  <result>
+    <focus>color</focus>
+    <confidence>37</confidence>
+    <object>
+      <color id="4">紫物体</color>
+    </object>
+  </result>
+</nlp>
+

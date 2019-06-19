@@ -29,8 +29,8 @@ using namespace std;
 class Listener
 {
 public:
-  int count = 0;
-  float x1 = 0, y1 = 0;
+  int count=0;
+  float x1=0, y1=0;
 public:
   void callback(const object_detect::Center_msg::ConstPtr& msg);
   int print_datax()

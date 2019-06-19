@@ -9,6 +9,7 @@ from sensor_msgs.msg import Image, RegionOfInterest
 from cv_bridge import CvBridge, CvBridgeError
 
 from object_detect.msg import Center_msg
+from std_msgs.msg import Int64
 
 
 class Findposition:
@@ -23,17 +24,17 @@ class Findposition:
 
 
         # 初始化订阅rgb格式图像数据的订阅者
-        if a == 1:
+        if a == 0:
         	self.image_sub = rospy.Subscriber("input_rgb_image", Image, self.image_callback_Pink, queue_size=1)
-        elif a == 2:
+        elif a == 1:
         	self.image_sub = rospy.Subscriber("input_rgb_image", Image, self.image_callback_blue, queue_size=1)        	
-        elif a == 3:
+        elif a == 2:
         	self.image_sub = rospy.Subscriber("input_rgb_image", Image, self.image_callback_Cyan, queue_size=1) 
-        elif a == 4:
+        elif a == 3:
         	self.image_sub = rospy.Subscriber("input_rgb_image", Image, self.image_callback_yellow, queue_size=1) 
-        elif a == 5:
+        elif a == 4:
         	self.image_sub = rospy.Subscriber("input_rgb_image", Image, self.image_callback_Violet, queue_size=1) 
-        elif a == 6:
+        elif a == 5:
         	self.image_sub = rospy.Subscriber("input_rgb_image", Image, self.image_callback_orange, queue_size=1) 
         else:
         	pass
@@ -505,6 +506,19 @@ class Findposition:
         print "Shutting down vision node."
         cv2.destroyAllWindows()
 
+################################################################################     
+#######################      通过语音交互识别要抓的颜色　   #########################
+################################################################################ 
+def voice_object_callback(data):
+	global a, flag
+	a = data.data
+	# flag = 1
+	# print(a)
+	Findposition(a)
+	return a
+
+
+
 ################################################################################            
 if __name__== '__main__' :
     # global center_x, center_y
@@ -512,7 +526,13 @@ if __name__== '__main__' :
         rospy.init_node("object_detect", anonymous=True)
         rate = rospy.Rate(10) # 发布频率为10hz
 
-        Findposition(1)
+        rospy.Subscriber("voice/object_color", Int64, voice_object_callback)
+        # print(a)
+        # if flag == 1:
+        	
+        # 	print("1")
+        # else:
+        # 	pass
 
         rospy.loginfo("object_detect is started.. \n Please subscribe the ROS image.")
         rospy.spin()
