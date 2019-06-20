@@ -29,8 +29,8 @@ using namespace std;
 class Listener
 {
 public:
-  int count=0;
-  float x1=0, y1=0;
+  int count = 0;
+  float x1 = 0, y1 = 0;
 public:
   void callback(const object_detect::Center_msg::ConstPtr& msg);
   int print_datax()
@@ -174,7 +174,7 @@ int main(int argc, char **argv)
         do {
             srv.request.ptpMode = 1;
             srv.request.x = 195;
-            srv.request.y = 0;
+            srv.request.y = 195;
             srv.request.z = 80;
             srv.request.r = 0;
             client.call(srv);
@@ -187,7 +187,21 @@ int main(int argc, char **argv)
             }
         } while (0);
 
-
+        do {
+            srv.request.ptpMode = 1;
+            srv.request.x = 0;
+            srv.request.y = 217;
+            srv.request.z = 80;
+            srv.request.r = 0;
+            client.call(srv);
+            if (srv.response.result == 0) {
+                break;
+            }     
+            ros::spinOnce();
+            if (ros::ok() == false) {
+                break;
+            }
+        } while (0);
 
         // 启动物体识别
         do {
@@ -211,12 +225,12 @@ int main(int argc, char **argv)
 
         // 机械臂运动到物体中心位置
         do {
-            x = (239.5 - sy)/4.7091 + 44.1 + 195;
-            y = (319.5 - sx)/4.7091;
+            x = (319.5 - sx)/4.522;
+            y = (sy - 239.5)/4.522 + 217 - 35.37;
             srv.request.ptpMode = 1;
             srv.request.x = x;
             srv.request.y = y;
-            srv.request.z = -35;
+            srv.request.z = -37.5;
             srv.request.r = 0;
             client.call(srv);
             if (srv.response.result == 0) {
@@ -270,6 +284,7 @@ int main(int argc, char **argv)
 
 
         // ************************** drop off **************************
+
         client = n.serviceClient<dobot::SetEndEffectorSuctionCup>("/DobotServer/SetEndEffectorSuctionCup");
         dobot::SetEndEffectorSuctionCup sck3;
         //drop off 
