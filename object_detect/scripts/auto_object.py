@@ -1,31 +1,28 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-import cv2
-import numpy as np
-import time
-
 import rospy
-from sensor_msgs.msg import Image, RegionOfInterest
+import cv2
 from cv_bridge import CvBridge, CvBridgeError
 
+from sensor_msgs.msg import Image, RegionOfInterest
 from object_detect.msg import Center_msg
 from std_msgs.msg import Int64
 from std_msgs.msg import Int32MultiArray
 
+import numpy as np
+import time
 
 class Findposition:
     def __init__(self):
         self.tag1 = 0
-
         rospy.on_shutdown(self.cleanup);
 
         # 初始化ROS节点
         rospy.init_node("object_detect", anonymous=True)
 
+        # 创建cv_bridge话题
         self.bridge = CvBridge()
 
-        # 创建cv_bridge话题
         # 创建图像发布话题
         self.image_pub = rospy.Publisher("cv_bridge_image", Image, queue_size=1)
         # 创建识别物体中心坐标的发布话题
