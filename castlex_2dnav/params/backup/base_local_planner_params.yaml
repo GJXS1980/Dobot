@@ -1,0 +1,50 @@
+TrajectoryPlannerROS:
+
+  # 机器人配置参数
+  acc_lim_x: 1.5               # 机器人在x方向的最大加速度,单位m/s^2
+  acc_lim_y: 1.5               # 机器人在y方向的最大加速度,单位m/s^2
+  acc_lim_theta:  3.2          # 机器人的最大角加速度,单位rad/s^2
+
+  max_vel_x: 0.3                # 基座在x方向允许的最大线速度，单位m/s
+  min_vel_x: 0.1                # 基座在x方向允许的最小线速度，单位m/s
+
+  max_vel_y: 0.3                # 基座在y方向允许的最大线速度，单位m/s
+  min_vel_y: 0.1                # 基座在y方向允许的最小线速度，单位m/s
+
+  max_vel_theta: 1.57           # 基座允许的最大角速度，单位rad/s
+  min_vel_theta: -1.57          # 基座允许的最小角速度，单位rad/s
+  min_in_place_vel_theta: 0.314 # 原地旋转时，基座允许的最小角速度，单位rad/s
+
+  holonomic_robot: true         # 确定是否为全向轮或非全向轮机器人生成速度指令(对于全向轮机器人，可以向基座发出施加速度命令。 对于非全向轮机器人，不会发出速度指令)
+  escape_vel: -0.5              # 表示机器人的逃离速度，即背向相反方向行走速度，单位为 m/s (该值必需设为负值，但若设置为正值，机器人会在执行逃离操作时向前移动)
+
+  # 目标容差参数
+  yaw_goal_tolerance: 0.157     # 控制器达到目标时的偏航/旋转公差（弧度），该值设置小可能导致机器人接近目标振荡。默认为0.1
+  xy_goal_tolerance: 0.25       # 允许机器人所到目标的坐标（以米为单位）偏差，该值过小可能导致机器人在目标位置附近不断调整到精确的目标位置。默认为0.1
+  latch_xy_goal_tolerance: false  # 目标坐标偏差锁存，如果上锁，机器人到达过坐标后只进行简单的方向调整，即使在公差外。默认为false
+
+  # 前向模拟参数
+  sim_time: 2.0                 # 前向模拟轨迹的时间，单位为 s
+  sim_granularity: 0.02         # 在给定轨迹上的点之间的步长，单位为 m
+  angular_sim_granularity: 0.02 # 给定角度轨迹的弧长，单位为 rad
+  vx_samples: 6                 # x方向速度的样本数
+  vtheta_samples: 20            # 角速度的样本数
+  controller_frequency: 20.0    # 调用控制器的频率，单位为 Hz
+
+  # 轨迹评分参数
+  meter_scoring: true # 默认false情况下，用单元格作为打分的单位，反之，则用米
+  occdist_scale:  0.1 # 控制器应尽量避免障碍物的权重
+  pdist_scale: 0.75  # 地图单元格的路径距离系数，决定有多接近路径，默认为0.6。
+  gdist_scale: 1.0 # 地图单元格两点距离的系数，决定有多接近局部目标，默认为0.6。
+
+  heading_lookahead: 0.325  # 原地旋转时向前看多少米
+  heading_scoring: false  # 是否根据机器人前进路径的距离进行评分
+  heading_scoring_timestep: 0.8   # 航向计算距离时，沿着模拟轨迹向前看的时间
+  dwa: true # 是否使用Dynamic Window Approach (DWA)，或者是否使用Trajectory Rollout
+  simple_attractor: false
+  publish_cost_grid_pc: true      # 是否使用cost_grid发布。如果为true，在/ cost_cloud话题生成；sensor_msgs/ PointCloud2
+
+  #　防振荡参数
+  oscillation_reset_dist: 0.05 # 机器人必须运动多少米远后才能复位震荡标记
+  escape_reset_dist: 0.1
+  escape_reset_theta: 0.1

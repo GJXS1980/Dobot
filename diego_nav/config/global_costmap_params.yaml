@@ -1,0 +1,13 @@
+global_costmap:  
+ global_frame: /map  
+ robot_base_frame: base_link  
+ update_frequency: 5.0  
+ static_map: true
+ transform_tolerance: 0.8
+ 
+#在global_costmap中使用下面三个插件来融合三个不同图层：static_layer、obstacle_layer和inflation_layer
+plugins:
+  - {name: static_layer,    type: "costmap_2d::StaticLayer"}
+#  - {name: obstacle_layer,  type: "costmap_2d::ObstacleLayer"}
+  - {name: inflation_layer, type: "costmap_2d::InflationLayer"}
+

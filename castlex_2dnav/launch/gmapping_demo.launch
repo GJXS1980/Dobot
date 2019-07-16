@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8'?>
+<launch>
+
+  <!--- Run gmapping -->
+  <include file="$(find castlex_2dnav)/launch/include/gmapping.launch" />
+
+  <!--- Run Move Base -->
+  <include file="$(find castlex_2dnav)/launch/include/move_base.launch" />
+
+</launch>

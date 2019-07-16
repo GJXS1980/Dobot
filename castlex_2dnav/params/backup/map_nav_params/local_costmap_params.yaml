@@ -1,0 +1,10 @@
+local_costmap:
+   global_frame: map	# 表示全局代价地图需要在哪个参考系下运行
+   robot_base_frame: base_link	# 机器人本体的坐标系
+   update_frequency: 5.0
+   publish_frequency: 2.0
+   width: 6.0	# 设置代价地图宽(米)
+   height: 6.0	# 设置代价地图高(米)
+   resolution: 0.05	# 分辨率（米/格）
+   static_map: false	# 比赛场地可以考虑设置成true
+   rolling_window: true # 与上面参数相反

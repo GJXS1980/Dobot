@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<launch>
+
+ <arg name="use_sim_time" default="false"/>
+ <arg name="map" default="test_map.yaml"/>
+ <!--arg name="nav_rviz" default="nav.rviz"/-->
+
+
+  <!-- Run the map server -->
+ <node name="map_server" pkg="map_server" type="map_server" args="$(find castlex_2dnav)/maps/$(arg map)" />
+
+  <!--- Run Move Base -->
+ <include file="$(find castlex_2dnav)/launch/include/move_base.launch" />
+
+   <!--- Run AMCL -->
+ <include file="$(find castlex_2dnav)/launch/include/castlex_amcl.launch" />
+
+  <!--  激光雷达相对于底盘的位置  -->
+  <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser4" 
+    args="0.12 0.0 0.15 0 0 0.0 /base_link /laser_frame 40" />
+
+  <!-- Run the Rviz -->
+ <!--node name="rviz" pkg="rviz" type="rviz" args="-d $(find castlex_2dnav)/rviz/$(arg nav_rviz)" /-->
+
+
+
+</launch>

@@ -14,6 +14,8 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   genmsg
   geometry_msgs
+  actionlib
+  actionlib_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -82,6 +84,8 @@ add_service_files(
   SetEndEffectorGripper.srv
   GetEndEffectorGripper.srv
 
+  GetQueuedCmdCurrentIndex.srv
+
   SetJOGJointParams.srv
   GetJOGJointParams.srv
   SetJOGCoordinateParams.srv
@@ -141,11 +145,12 @@ add_service_files(
 #   Action2.action
 # )
 
+find_package(catkin REQUIRED genmsg actionlib_msgs actionlib)
+add_action_files(DIRECTORY action FILES Dobot.action)
+generate_messages(DEPENDENCIES actionlib_msgs std_msgs)
+
+
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-)
 
 
 ################################################
@@ -262,6 +267,9 @@ add_executable(DobotClient_Initialization src/object_ws/DobotClient_Initializati
 target_link_libraries(DobotClient_Initialization ${catkin_LIBRARIES})
 add_dependencies(DobotClient_Initialization dobot_gencpp)
 
+
+
+
 add_executable(Dobot_object_demo src/object_ws/Dobot_object_demo.cpp)
 target_link_libraries(Dobot_object_demo ${catkin_LIBRARIES})
 add_dependencies(Dobot_object_demo dobot_gencpp)
@@ -269,6 +277,46 @@ add_dependencies(Dobot_object_demo dobot_gencpp)
 add_executable(Dobot_object_fin src/object_ws/Dobot_object_fin.cpp)
 target_link_libraries(Dobot_object_fin ${catkin_LIBRARIES})
 add_dependencies(Dobot_object_fin dobot_gencpp)
+
+
+add_executable(Dobot_client src/object_ws/action/Dobot_client.cpp)
+target_link_libraries(Dobot_client ${catkin_LIBRARIES})
+add_dependencies(Dobot_client dobot_gencpp)
+
+add_executable(Dobot_server_test src/object_ws/action/Dobot_server_test.cpp)
+target_link_libraries(Dobot_server_test ${catkin_LIBRARIES})
+add_dependencies(Dobot_server_test dobot_gencpp)
+
+
+
+add_executable(Dobot_server_drop_off src/auto_action/Dobot_server_drop_off.cpp)
+target_link_libraries(Dobot_server_drop_off ${catkin_LIBRARIES})
+add_dependencies(Dobot_server_drop_off dobot_gencpp)
+
+add_executable(Dobot_server_pick_up src/auto_action/Dobot_server_pick_up.cpp)
+target_link_libraries(Dobot_server_pick_up ${catkin_LIBRARIES})
+add_dependencies(Dobot_server_pick_up dobot_gencpp)
+
+
+add_executable(Dobot_client_pick_up src/auto_action/Dobot_client_pick_up.cpp)
+target_link_libraries(Dobot_client_pick_up ${catkin_LIBRARIES})
+add_dependencies(Dobot_client_pick_up dobot_gencpp)
+
+add_executable(Dobot_client_drop_off src/auto_action/Dobot_client_drop_off.cpp)
+target_link_libraries(Dobot_client_drop_off ${catkin_LIBRARIES})
+add_dependencies(Dobot_client_drop_off dobot_gencpp)
+
+add_executable(pick_up_c src/auto_action/pick_up_c.cpp)
+target_link_libraries(pick_up_c ${catkin_LIBRARIES})
+add_dependencies(pick_up_c dobot_gencpp)
+
+add_executable(pick_up_s src/auto_action/pick_up_s.cpp)
+target_link_libraries(pick_up_s ${catkin_LIBRARIES})
+add_dependencies(pick_up_s dobot_gencpp)
+
+add_executable(test1 src/object_ws/test1.cpp)
+target_link_libraries(test1 ${catkin_LIBRARIES})
+add_dependencies(test1 dobot_gencpp)
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}

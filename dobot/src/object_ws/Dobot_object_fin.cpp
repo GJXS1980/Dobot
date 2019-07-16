@@ -17,6 +17,9 @@
 #include "dobot/SetPTPCommonParams.h"
 #include "dobot/SetPTPCmd.h"
 
+#include "dobot/SetHOMEParams.h"
+#include "dobot/SetHOMECmd.h"
+
 #include "dobot/SetEndEffectorSuctionCup.h"
 
 #include "object_detect/Center_msg.h"
@@ -29,8 +32,8 @@ using namespace std;
 class Listener
 {
 public:
-  int count = 0;
-  float x1 = 0, y1 = 0;
+  int count=0;
+  float x1=0, y1=0;
 public:
   void callback(const object_detect::Center_msg::ConstPtr& msg);
   int print_datax()
@@ -152,6 +155,24 @@ int main(int argc, char **argv)
     } while (0);
 
 
+//  执行机械臂归零操作
+    do{
+        client = n.serviceClient<dobot::SetHOMEParams>("/DobotServer/SetHOMEParams");
+        dobot::SetHOMEParams home;
+        home.request.x = 200;
+        home.request.y = 0;
+        home.request.z = 0;
+        home.request.r = 0;
+        home.request.isQueued = 1;
+        client.call(home); 
+ 
+    } while(0);
+ 
+    do{
+        client = n.serviceClient<dobot::SetHOMECmd>("/DobotServer/SetHOMECmd");
+        dobot::SetHOMECmd home1;
+        client.call(home1);
+    } while(0);
 
 
     while (ros::ok()) {
@@ -173,8 +194,8 @@ int main(int argc, char **argv)
         // Initialization Robot pose
         do {
             srv.request.ptpMode = 1;
-            srv.request.x = 195;
-            srv.request.y = 195;
+            srv.request.x = 240;
+            srv.request.y = 0;
             srv.request.z = 80;
             srv.request.r = 0;
             client.call(srv);
@@ -187,21 +208,7 @@ int main(int argc, char **argv)
             }
         } while (0);
 
-        do {
-            srv.request.ptpMode = 1;
-            srv.request.x = 0;
-            srv.request.y = 217;
-            srv.request.z = 80;
-            srv.request.r = 0;
-            client.call(srv);
-            if (srv.response.result == 0) {
-                break;
-            }     
-            ros::spinOnce();
-            if (ros::ok() == false) {
-                break;
-            }
-        } while (0);
+
 
         // 启动物体识别
         do {
@@ -225,8 +232,8 @@ int main(int argc, char **argv)
 
         // 机械臂运动到物体中心位置
         do {
-            x = (319.5 - sx)/4.522;
-            y = (sy - 239.5)/4.522 + 217 - 35.37;
+            x = (sx - 319.5)/4.6314 - 32.2 + 240;
+            y = (239.5 - sy)/4.6314;
             srv.request.ptpMode = 1;
             srv.request.x = x;
             srv.request.y = y;
@@ -281,10 +288,9 @@ int main(int argc, char **argv)
         } while (0);
 
 
-
+/* 
 
         // ************************** drop off **************************
-
         client = n.serviceClient<dobot::SetEndEffectorSuctionCup>("/DobotServer/SetEndEffectorSuctionCup");
         dobot::SetEndEffectorSuctionCup sck3;
         //drop off 
@@ -300,7 +306,7 @@ int main(int argc, char **argv)
             }
         }while (0);
 
-
+*/
         //ros::spinOnce();
     return 0;
     }

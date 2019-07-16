@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<launch>
+
+    <!-- 启动底盘  -->
+  <!--include file="$(find cbot_move)/launch/test.launch"/-->
+
+
+    <!-- 启动导航  -->
+  <!--include file="$(find diego_nav)/launch/diego_run_gmapping_amcl_rplidar.launch"/-->
+
+    <!-- 启动语音识别  -->
+  <!--include file="$(find castle_voice_system)/launch/test.launch"/-->
+
+
+    <!-- 启动识别节点  -->
+    <!--node pkg="diego_nav" name="diego_nav" type="castlex_test.py"/-->   
+
+    <!-- 启动识别节点  -->
+    <!--node pkg="diego_nav" name="diego_nav_scend" type="castlex_nav_voice_scend.py"/-->  
+
+
+    <!-- 启动机械臂  -->
+  <node pkg="dobot" type="DobotServer" name="DobotServer" args="dobot" />
+
+    <!-- 初始化机械臂位置  -->
+  <node pkg="dobot" type="Dobot_client" name="Dobot_client" />
+
+    <!-- 初始化机械臂位置  -->
+  <node pkg="dobot" type="Dobot_server" name="Dobot_server" />
+
+</launch>

@@ -1115,6 +1115,8 @@ void InitEIOServices(ros::NodeHandle &n, std::vector<ros::ServiceServer> &server
 #include "dobot/SetQueuedCmdStopExec.h"
 #include "dobot/SetQueuedCmdForceStopExec.h"
 #include "dobot/SetQueuedCmdClear.h"
+#include "dobot/GetQueuedCmdCurrentIndex.h"	// GJXS
+
 
 bool SetQueuedCmdStartExecService(dobot::SetQueuedCmdStartExec::Request &req, dobot::SetQueuedCmdStartExec::Response &res)
 {
@@ -1144,6 +1146,22 @@ bool SetQueuedCmdClearService(dobot::SetQueuedCmdClear::Request &req, dobot::Set
     return true;
 }
 
+
+/*				GJXS			*/
+bool GetQueuedCmdCurrentIndexService(dobot::GetQueuedCmdCurrentIndex::Request &req, dobot::GetQueuedCmdCurrentIndex::Response &res)
+{   
+    uint64_t queuedCmdIndex;
+    res.result = GetQueuedCmdCurrentIndex(&queuedCmdIndex);
+ 
+    if (res.result == DobotCommunicate_NoError) {
+        res.queuedCmdIndex = queuedCmdIndex;
+    }
+    
+    return true;
+}
+
+
+
 void InitQueuedCmdServices(ros::NodeHandle &n, std::vector<ros::ServiceServer> &serverVec)
 {
     ros::ServiceServer server;
@@ -1155,6 +1173,10 @@ void InitQueuedCmdServices(ros::NodeHandle &n, std::vector<ros::ServiceServer> &
     server = n.advertiseService("/DobotServer/SetQueuedCmdForceStopExec", SetQueuedCmdForceStopExecService);
     serverVec.push_back(server);
     server = n.advertiseService("/DobotServer/SetQueuedCmdClear", SetQueuedCmdClearService);
+    serverVec.push_back(server);
+
+    /*				GJXS			*/
+    server = n.advertiseService("/DobotServer/GetQueuedCmdCurrentIndex", GetQueuedCmdCurrentIndexService);
     serverVec.push_back(server);
 }
 
