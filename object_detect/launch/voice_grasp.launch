@@ -1,0 +1,35 @@
+<?xml version='1.0' encoding='utf-8'?>
+<launch>
+
+    <!-- 启动机械臂  -->
+  <node pkg="dobot" type="DobotServer" name="DobotServer" args="dobot" />
+
+    <!-- 初始化机械臂位置  -->
+  <node pkg="dobot" type="robot_init_client" name="robot_init_client" />
+  <node pkg="dobot" type="robot_init_server" name="robot_init_server" />
+
+    <!-- 初始化机械臂识别物体位置  -->
+  <node pkg="dobot" type="robot_object_detect_client" name="robot_object_detect_client" />
+  <node pkg="dobot" type="robot_object_detect_server" name="robot_object_detect_server" />
+
+    <!-- 启动相机节点  -->
+  <include file="$(find usb_cam)/launch/usb_cam-test.launch"/>
+
+    <!-- 启动物体识别节点  -->
+    <node pkg="object_detect" name="voice_grasp" type="voice_grasp.py" output="screen">   
+        <remap from="input_rgb_image" to="/usb_cam/image_raw" />      
+    </node>
+
+    <!-- 启动语音识别  -->
+  <include file="$(find castle_voice_system)/launch/voice_object.launch"/>
+
+    <!-- 启动订阅cv_bridge_image话题  -->
+    <node name="rqt_image_view" pkg="rqt_image_view" type="rqt_image_view" args="/usb_cam/image_raw"/>
+
+    <!-- 物体的抓取  -->
+  <node pkg="dobot" type="robot_pick_up_client" name="robot_pick_up_client" />
+  <node pkg="dobot" type="robot_pick_up_server" name="robot_pick_up_server" />
+
+  <!--node pkg="dobot" type="Dobot_object_voice" name="Dobot_object_voice" /-->
+
+</launch>

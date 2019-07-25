@@ -32,8 +32,8 @@ using namespace std;
 class Listener
 {
 public:
-  int count=0;
-  float x1=0, y1=0;
+  int count;
+  float x1, y1, s;
 public:
   void callback(const object_detect::Center_msg::ConstPtr& msg);
   int print_datax()
@@ -63,8 +63,8 @@ void Listener::callback(const object_detect::Center_msg::ConstPtr& msg)
 
 int main(int argc, char **argv)
 {
-    float sx = 0, sy = 0;
-    float x = 195, y = 0;
+    float sx, sy, ss;
+    float x, y, s;
 
     ros::init(argc, argv, "DobotClient");
     ros::NodeHandle n;
@@ -227,13 +227,14 @@ int main(int argc, char **argv)
 
             std::cout << sx << "\n";
             std::cout << sy << "\n";
+
             } while (0);
 
 
         // 机械臂运动到物体中心位置
         do {
-            x = (sx - 319.5)/4.6314 - 32.2 + 240;
-            y = (239.5 - sy)/4.6314;
+            x = (sx - 319.5)/35.58 - 33.68 + 240+50;
+            y = (239.5 - sy)/35.58 -50;
             srv.request.ptpMode = 1;
             srv.request.x = x;
             srv.request.y = y;
@@ -288,7 +289,7 @@ int main(int argc, char **argv)
         } while (0);
 
 
-/* 
+
 
         // ************************** drop off **************************
         client = n.serviceClient<dobot::SetEndEffectorSuctionCup>("/DobotServer/SetEndEffectorSuctionCup");
@@ -306,7 +307,7 @@ int main(int argc, char **argv)
             }
         }while (0);
 
-*/
+
         //ros::spinOnce();
     return 0;
     }

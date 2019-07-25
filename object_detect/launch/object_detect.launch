@@ -11,10 +11,6 @@
   <include file="$(find usb_cam)/launch/usb_cam-test.launch"/>
 
     <!-- 启动人脸识别节点  -->
-    <!--node pkg="object_detect" name="object_test" type="object_test.py" output="screen">   
-        <remap from="input_rgb_image" to="/usb_cam/image_raw" />      
-    </node-->
-
     <node pkg="object_detect" name="object_test" type="object_test.py" output="screen">   
         <remap from="input_rgb_image" to="/usb_cam/image_raw" />      
     </node>

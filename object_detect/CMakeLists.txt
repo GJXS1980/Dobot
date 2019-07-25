@@ -56,12 +56,14 @@ find_package(catkin REQUIRED COMPONENTS
  add_message_files(
    FILES
    Center_msg.msg
+   object_result_msg.msg
  )
 
 ## Generate services in the 'srv' folder
  add_service_files(
    FILES
    Center.srv
+   object_result.srv
  )
 
 ## Generate actions in the 'action' folder
@@ -130,9 +132,9 @@ include_directories(
 # )
 
 
-add_executable(robot_action src/robot_action.cpp)
-target_link_libraries(robot_action ${catkin_LIBRARIES})
-add_dependencies(robot_action robot_action_gencpp)
+#add_executable(robot_action src/robot_action.cpp)
+#target_link_libraries(robot_action ${catkin_LIBRARIES})
+#add_dependencies(robot_action robot_action_gencpp)
 
 
 

@@ -318,6 +318,34 @@ add_executable(test1 src/object_ws/test1.cpp)
 target_link_libraries(test1 ${catkin_LIBRARIES})
 add_dependencies(test1 dobot_gencpp)
 
+
+#########    voice grasp   #################
+add_executable(robot_init_client src/grasp_ws/robot_init_client.cpp)
+target_link_libraries(robot_init_client ${catkin_LIBRARIES})
+add_dependencies(robot_init_client dobot_gencpp)
+
+add_executable(robot_init_server src/grasp_ws/robot_init_server.cpp)
+target_link_libraries(robot_init_server ${catkin_LIBRARIES})
+add_dependencies(robot_init_server dobot_gencpp)
+
+add_executable(robot_object_detect_client src/grasp_ws/robot_object_detect_client.cpp)
+target_link_libraries(robot_object_detect_client ${catkin_LIBRARIES})
+add_dependencies(robot_object_detect_client dobot_gencpp)
+
+add_executable(robot_object_detect_server src/grasp_ws/robot_object_detect_server.cpp)
+target_link_libraries(robot_object_detect_server ${catkin_LIBRARIES})
+add_dependencies(robot_object_detect_server dobot_gencpp)
+
+
+add_executable(robot_pick_up_client src/grasp_ws/robot_pick_up_client.cpp)
+target_link_libraries(robot_pick_up_client ${catkin_LIBRARIES})
+add_dependencies(robot_pick_up_client dobot_gencpp)
+
+add_executable(robot_pick_up_server src/grasp_ws/robot_pick_up_server.cpp)
+target_link_libraries(robot_pick_up_server ${catkin_LIBRARIES})
+add_dependencies(robot_pick_up_server dobot_gencpp)
+
+
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/dobot.cpp

@@ -10,8 +10,8 @@ using namespace std;
 class Listener
 {
 public:
-  int count;
-  float x1, y1;
+  int count = 0;
+  float x1 = 0, y1 = 0;
 public:
   void callback(const object_detect::Center_msg::ConstPtr& msg);
   int print_datax()
@@ -40,7 +40,7 @@ void Listener::callback(const object_detect::Center_msg::ConstPtr& msg)
 
 int main(int argc, char **argv)
 {
-  float sx, sy;
+  float sx = 0, sy = 0;
 
   // 初始化ROS节点
   ros::init(argc, argv, "listener_class");

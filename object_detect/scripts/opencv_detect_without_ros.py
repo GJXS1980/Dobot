@@ -250,7 +250,7 @@ class Findposition:
             cnt_second = sorted(cnts, key=cv2.contourArea, reverse=True)[0]	#当没有检测到图像的时候报错，要修改
             box =cv2.minAreaRect(cnt_second)    #生成最小外接矩形
             img_boxpoints = np.int0(cv2.boxPoints(box))  #返回最小外接矩形4 个顶点
-        # print img_boxpoints
+        print img_boxpoints
         return img_boxpoints  
 ################################################################################
 #######################      获取红色区域　　   #############################
@@ -572,7 +572,7 @@ class Findposition:
             print(center_x,center_y)
             cv2.imshow('Violet', Violet)
             cv2.imshow('morph',morph)
-            print(points)
+            # print(points)
             # if len(points) == 0:
             #     pass
             # else:
@@ -676,10 +676,10 @@ if __name__== '__main__' :
             # cv2.imshow('Image',img)
             d = Findposition(img)
             # d.main_process_black()	#黑色
-            # d.main_process_blue()	#蓝色
-            # d.main_process_Cyan()	#青色
+            #d.main_process_blue()	#蓝色
+            #d.main_process_Cyan()	#青色
             # d.main_process_orange()
-            # d.main_process_yellow()	#	黄色（用不上）
+            #d.main_process_yellow()	#	黄色（用不上）
             d.main_process_Violet()	#紫色
             # d.main_process_red()
             #d.main_process_red1()
@@ -692,4 +692,4 @@ if __name__== '__main__' :
                 break
     cap.release()  #关闭摄像头
     cv2.waitKey(0)
-    #cv2.destroyAllWindow()
+    cv2.destroyAllWindow()
