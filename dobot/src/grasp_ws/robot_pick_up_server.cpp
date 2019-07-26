@@ -33,7 +33,9 @@ using namespace std;
 
 typedef actionlib::SimpleActionServer<dobot::DobotAction> Server;
 
-
+double side_length;
+double CamToSucker;
+double suck_z;
 
 /*  ********************************************************************* */
 /*      －－－－－－     创建物体识别中心坐标返回的类    －－－－－   */
@@ -92,10 +94,19 @@ void execute_pick_up(const dobot::DobotGoalConstPtr& goal, Server* as)
 
     ros::NodeHandle n;
 
+    ros::NodeHandle node("~");
+
+
     ros::ServiceClient client;
 
 
     ros::Publisher action_pub = n.advertise<std_msgs::Int64>("grasp_success", 1000);
+
+// 设置参数
+
+    node.param("side_length", side_length, 34.45);
+    node.param("CamToSucker", CamToSucker, 35.58);
+    node.param("suck_z", suck_z, -50.0);
 
 
 
@@ -128,12 +139,12 @@ void execute_pick_up(const dobot::DobotGoalConstPtr& goal, Server* as)
 
         // 机械臂运动到物体中心位置
         do {
-            x = (239.5 - sy )/(ss/34.45) - 35.58 + 230;       // ss/34.45为像素距离之比
-            y = (319.5 - sx)/(ss/34.45) + 10;
+            x = (239.5 - sy )/(ss/side_length) - CamToSucker + 230;       // ss/34.45为像素距离之比
+            y = (319.5 - sx)/(ss/side_length) + 10;
             srv.request.ptpMode = 1;
             srv.request.x = x;
             srv.request.y = y;
-            srv.request.z = -50;    //-50两快木块演示用
+            srv.request.z = suck_z;    //-50两快木块演示用
             srv.request.r = 0;
             client.call(srv);
             if (srv.response.result == 0) {

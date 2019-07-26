@@ -30,13 +30,13 @@ void feedbackCb(const dobot::DobotFeedbackConstPtr& feedback)
 
 
 /*  ********************************************************************* */
-/*
+
 void PickUpCallback(const std_msgs::Int64::ConstPtr& msg)
 {
     int tag;
     tag = msg -> data;
 
-if (tag == 0 || tag == 1 || tag == 2 || tag == 3 || tag == 4 || tag == 5)
+if (tag == 0 || tag == 3)
 {
     // 定义一个客户端
     Client client("initialization", true);
@@ -54,7 +54,7 @@ if (tag == 0 || tag == 1 || tag == 2 || tag == 3 || tag == 4 || tag == 5)
     // 发送action的goal给服务器端，并且设置回调函数
     client.sendGoal(goal,  &doneCb, &activeCb, &feedbackCb);}
 }
-*/
+
 
 
 /*  ********************************************************************* */
@@ -63,9 +63,9 @@ int main(int argc, char** argv)
 {
     ros::init(argc, argv, "dobot_init_client");
 
-    //ros::NodeHandle n;
+    ros::NodeHandle n;
 
-    // 定义一个客户端
+/*    // 定义一个客户端
     Client client("initialization", true);
 
     // 等待服务器端
@@ -79,10 +79,11 @@ int main(int argc, char** argv)
     goal.dobot_pick_id = 1;
 
     // 发送action的goal给服务器端，并且设置回调函数
- 	client.sendGoal(goal,  &doneCb, &activeCb, &feedbackCb);
+ 	client.sendGoal(goal,  &doneCb, &activeCb, &feedbackCb);*/
 
 
-    //ros::Subscriber subPick = n.subscribe("voice/object_color", 1000, PickUpCallback);
+    ros::Subscriber subPick = n.subscribe("grasp_success", 1000, PickUpCallback);
+    ros::Subscriber subPick1 = n.subscribe("DobotZeroDone", 1000, PickUpCallback);
 
     ros::spin();
 

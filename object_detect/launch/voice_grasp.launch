@@ -28,7 +28,12 @@
 
     <!-- 物体的抓取  -->
   <node pkg="dobot" type="robot_pick_up_client" name="robot_pick_up_client" />
-  <node pkg="dobot" type="robot_pick_up_server" name="robot_pick_up_server" />
+  <node pkg="dobot" type="robot_pick_up_server" name="robot_pick_up_server">
+	<!--param name="side_length" value="34.45" />
+	<param name="CamToSucker" value="35.58" /-->
+	<param name="suck_z" value="-50.0" />
+  </node>
+
 
   <!--node pkg="dobot" type="Dobot_object_voice" name="Dobot_object_voice" /-->
 

@@ -45,6 +45,12 @@ void execute_pick_up(const dobot::DobotGoalConstPtr& goal, Server* as)
     ros::NodeHandle n;
     ros::ServiceClient client;
 
+    ros::Publisher Init_pub = n.advertise<std_msgs::Int64>("DobotZeroDone", 1000);
+
+    std_msgs::Int64 tag;
+
+
+
 // 清除指令队列
     client = n.serviceClient<dobot::SetQueuedCmdClear>("/DobotServer/SetQueuedCmdClear");
     dobot::SetQueuedCmdClear srv2;
@@ -102,6 +108,9 @@ while(srv8.response.queuedCmdIndex < srv.response.queuedCmdIndex)
         //cout << "wait!" << endl;
     }
  
+    tag.data = 0;
+    Init_pub.publish(tag);
+
 	// 当action完成后，向客户端返回结果
     ROS_INFO("Manipulator arm %d finish working.", goal->dobot_pick_id);
     as->setSucceeded();
