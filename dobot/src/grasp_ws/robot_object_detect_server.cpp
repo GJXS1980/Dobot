@@ -33,6 +33,9 @@ using namespace std;
 
 typedef actionlib::SimpleActionServer<dobot::DobotAction> Server;
 
+double detect_x;
+double detect_y;
+double detect_z;
 
 /*  ********************************************************************* */
 /*      －－－－－－     创建语音识别颜色的id返回的类    －－－－－   */
@@ -70,9 +73,15 @@ void execute_pick_up(const dobot::DobotGoalConstPtr& goal, Server* as)
 
     ros::NodeHandle n;
     ros::ServiceClient client;
+    ros::NodeHandle node("~");
 
 	ros::Publisher object_pub = n.advertise<std_msgs::Int64>("robotInitDone", 1000);
 	std_msgs::Int64 tag;
+
+// 设置参数
+    node.param("detect_x", detect_x, 230.0);  // 识别物体时机械臂的x坐标(笛卡尔坐标系)
+    node.param("detect_y", detect_y, 0.0);  //　识别物体时机械臂的y坐标(笛卡尔坐标系)
+    node.param("detect_z", detect_z, 60.0);    //　识别物体时机械臂的z坐标(笛卡尔坐标系)
 
 
 // 清除指令队列
@@ -110,9 +119,9 @@ void execute_pick_up(const dobot::DobotGoalConstPtr& goal, Server* as)
         // 初始化机械臂的位姿
         do {
             srv.request.ptpMode = 1;
-            srv.request.x = 230;
-            srv.request.y = 0;
-            srv.request.z = 60;
+            srv.request.x = detect_x;
+            srv.request.y = detect_y;
+            srv.request.z = detect_z;
             srv.request.r = 0;
             client.call(srv);
             if (srv.response.result == 0) {

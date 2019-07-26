@@ -36,6 +36,9 @@ typedef actionlib::SimpleActionServer<dobot::DobotAction> Server;
 double side_length;
 double CamToSucker;
 double suck_z;
+double CamToSuc_deviation;
+double detect_x;
+double detect_y;
 
 /*  ********************************************************************* */
 /*      －－－－－－     创建物体识别中心坐标返回的类    －－－－－   */
@@ -104,9 +107,12 @@ void execute_pick_up(const dobot::DobotGoalConstPtr& goal, Server* as)
 
 // 设置参数
 
-    node.param("side_length", side_length, 34.45);
-    node.param("CamToSucker", CamToSucker, 35.58);
-    node.param("suck_z", suck_z, -50.0);
+    node.param("side_length", side_length, 34.45);	// 方块的边长
+    node.param("CamToSucker", CamToSucker, 35.58);	//　相机到吸盘的距离（x方向的偏差）
+    node.param("suck_z", suck_z, -50.0);	//　吸盘吸取的高度
+    node.param("CamToSuc_deviation", CamToSuc_deviation, 10.0);	//　相机与吸盘在y方向的偏差
+    node.param("detect_x", detect_x, 230.0);    // 识别物体时机械臂的x坐标(笛卡尔坐标系)
+    node.param("detect_y", detect_y, 0.0);    //　识别物体时机械臂的y坐标(笛卡尔坐标系)
 
 
 
@@ -139,8 +145,8 @@ void execute_pick_up(const dobot::DobotGoalConstPtr& goal, Server* as)
 
         // 机械臂运动到物体中心位置
         do {
-            x = (239.5 - sy )/(ss/side_length) - CamToSucker + 230;       // ss/34.45为像素距离之比
-            y = (319.5 - sx)/(ss/side_length) + 10;
+            x = (239.5 - sy )/(ss/side_length) - CamToSucker + detect_x;       // ss/34.45为像素距离之比
+            y = (319.5 - sx)/(ss/side_length) + CamToSuc_deviation + detect_y;
             srv.request.ptpMode = 1;
             srv.request.x = x;
             srv.request.y = y;

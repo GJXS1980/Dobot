@@ -9,8 +9,20 @@
   <node pkg="dobot" type="robot_init_server" name="robot_init_server" />
 
     <!-- 初始化机械臂识别物体位置  -->
+        <!-- 初始化机械臂识别物体位置的客户端  -->
   <node pkg="dobot" type="robot_object_detect_client" name="robot_object_detect_client" />
-  <node pkg="dobot" type="robot_object_detect_server" name="robot_object_detect_server" />
+
+        <!-- 初始化机械臂识别物体位置的服务器端  -->
+  <node pkg="dobot" type="robot_object_detect_server" name="robot_object_detect_server" >
+    <!-- 识别物体时机械臂的x坐标(笛卡尔坐标系)  -->
+  <param name="detect_x" value="230.0" />   
+
+    <!-- 识别物体时机械臂的y坐标(笛卡尔坐标系)  -->  
+  <param name="detect_y" value="0.0" />  
+
+   <!-- 识别物体时机械臂的z坐标(笛卡尔坐标系) -->   
+  <param name="detect_z" value="80.0" />
+  </node>
 
     <!-- 启动相机节点  -->
   <include file="$(find usb_cam)/launch/usb_cam-test.launch"/>
@@ -26,15 +38,26 @@
     <!-- 启动订阅cv_bridge_image话题  -->
     <node name="rqt_image_view" pkg="rqt_image_view" type="rqt_image_view" args="/usb_cam/image_raw"/>
 
-    <!-- 物体的抓取  -->
+    <!-- 物体抓取的客户端  -->
   <node pkg="dobot" type="robot_pick_up_client" name="robot_pick_up_client" />
+
+      <!-- 物体抓取的服务器端  -->
   <node pkg="dobot" type="robot_pick_up_server" name="robot_pick_up_server">
-	<!--param name="side_length" value="34.45" />
-	<param name="CamToSucker" value="35.58" /-->
+    <!-- 方块的边长  -->
+	<param name="side_length" value="34.45" />   
+    <!-- 相机到吸盘的距离（x方向的偏差）  -->  
+	<param name="CamToSucker" value="35.58" />  
+   <!-- 相机与吸盘在y方向的偏差  -->
+  <param name="CamToSuc_deviation" value="10.0" />  
+   <!-- 吸盘吸取的高度  -->   
 	<param name="suck_z" value="-50.0" />
+
+
+   <!-- 识别物体时机械臂的x坐标(笛卡尔坐标系),数值跟robot_object_detect_server设置保持一致  -->   
+  <param name="detect_x" value="230.0" />
+   <!-- 识别物体时机械臂的y坐标(笛卡尔坐标系),数值跟robot_object_detect_server设置保持一致 -->   
+  <param name="detect_y" value="0.0" />
+
   </node>
-
-
-  <!--node pkg="dobot" type="Dobot_object_voice" name="Dobot_object_voice" /-->
 
 </launch>
