@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<launch>
+<include file="$(find cbot_move)/launch/test.launch"/>
+<include file="$(find diego_nav)/launch/diego_run_gmapping_amcl_rplidar.launch"/>
+<include file="$(find castle_voice_system)/launch/castle_command.launch"/>
+
+</launch>

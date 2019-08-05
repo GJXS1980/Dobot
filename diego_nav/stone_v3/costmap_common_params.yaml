@@ -10,7 +10,7 @@
 # 20180613: initial this file.
  
 #设置机器人的半径，单位为米。机器人是圆形时，使用robot_radius,否则使用footprint
-robot_radius: 0.20
+robot_radius: 0.22
 #配置障碍物图层
 obstacle_layer:
   enabled: true    #是否启用障碍物图层

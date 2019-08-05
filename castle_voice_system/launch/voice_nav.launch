@@ -1,0 +1,12 @@
+<?xml version = "1.0"?>
+<launch>
+    <!--打开语音唤醒-->
+    <!-- include file="$(find snowboy_ros)/launch/snowboy.launch"/ -->
+    <include file="$(find xf_awake)/launch/castle_awake.launch"/>
+    <!--打开命令词识别-->
+    <node pkg = "castle_voice_system" type = "voice_nav_order_node" name = "voice_nav_order_node" output="screen"/>
+    <!--打开命令词解析-->
+    <node pkg = "castle_voice_system" type = "voice_nav.py" name = "XML_Analysis" output="screen">
+    <param name="file_path" value="$(find castle_voice_system)/src/voiceNav.xml" />
+    </node>
+</launch>

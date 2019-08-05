@@ -28,9 +28,14 @@
   <include file="$(find usb_cam)/launch/usb_cam-test.launch"/>
 
     <!-- 启动物体识别节点  -->
-    <node pkg="object_detect" name="voice_grasp" type="voice_grasp.py" output="screen">   
+    <!--node pkg="object_detect" name="voice_grasp" type="voice_grasp.py" output="screen">   
+        <remap from="input_rgb_image" to="/usb_cam/image_raw" />      
+    </node-->
+
+    <node pkg="object_detect" name="voice_grasp" type="voice_grasp" output="screen">   
         <remap from="input_rgb_image" to="/usb_cam/image_raw" />      
     </node>
+
 
     <!-- 启动语音识别  -->
   <include file="$(find castle_voice_system)/launch/voice_object.launch"/>
@@ -50,7 +55,7 @@
    <!-- 相机与吸盘在y方向的偏差  -->
   <param name="CamToSuc_deviation" value="10.0" />  
    <!-- 吸盘吸取的高度  -->   
-	<param name="suck_z" value="-50.0" />
+	<param name="suck_z" value="-40.0" />
 
 
    <!-- 识别物体时机械臂的x坐标(笛卡尔坐标系),数值跟robot_object_detect_server设置保持一致  -->   

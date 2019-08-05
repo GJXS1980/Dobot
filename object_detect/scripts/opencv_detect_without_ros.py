@@ -679,8 +679,8 @@ if __name__== '__main__' :
             #d.main_process_blue()	#蓝色
             #d.main_process_Cyan()	#青色
             # d.main_process_orange()
-            #d.main_process_yellow()	#	黄色（用不上）
-            d.main_process_Violet()	#紫色
+            d.main_process_yellow()	#	黄色（用不上）
+            #d.main_process_Violet()	#紫色
             # d.main_process_red()
             #d.main_process_red1()
             # d.main_process_green()

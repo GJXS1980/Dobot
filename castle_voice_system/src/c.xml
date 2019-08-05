@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?><nlp>
+  <version>1.1</version>
+  <rawtext>A点拿蓝色物块到B点</rawtext>
+  <confidence>40</confidence>
+  <engine>local</engine>
+  <result>
+    <focus>start|pick|block|t|terminal</focus>
+    <confidence>21|36|47|99|36</confidence>
+    <object>
+      <start id="0">A点</start>
+      <pick id="65535">拿</pick>
+      <block id="1">蓝色物块</block>
+      <t id="65535">到</t>
+      <terminal id="1">B点</terminal>
+    </object>
+  </result>
+</nlp>
+

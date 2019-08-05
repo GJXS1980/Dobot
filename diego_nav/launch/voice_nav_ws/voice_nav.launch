@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='utf-8'?>
+<launch>
+
+    <!-- 启动底盘  -->
+  <include file="$(find cbot_move)/launch/test.launch"/>
+
+    <!-- 启动导航  -->
+  <include file="$(find diego_nav)/launch/diego_run_gmapping_amcl_rplidar.launch"/>
+
+    <!-- 启动语音识别  -->
+  <include file="$(find castle_voice_system)/launch/voice_nav.launch"/>
+
+
+  <!-- 启动识别节点  -->
+  <node pkg="diego_nav" name="voice_nav_onePosition" type="voice_nav_onePosition.py"/>   
+
+</launch>
