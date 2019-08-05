@@ -7,6 +7,6 @@
     <node pkg = "castle_voice_system" type = "voice_nav_order_node" name = "voice_nav_order_node" output="screen"/>
     <!--打开命令词解析-->
     <node pkg = "castle_voice_system" type = "voice_nav.py" name = "XML_Analysis" output="screen">
-    <param name="file_path" value="$(find castle_voice_system)/src/voiceNav.xml" />
+    <param name="file_path" value="$(find castle_voice_system)/params/voiceNav.xml" />
     </node>
 </launch>

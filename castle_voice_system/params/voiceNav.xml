@@ -1,12 +1,13 @@
 <?xml version='1.0' encoding='utf-8' standalone='yes' ?><nlp>
   <version>1.1</version>
-  <rawtext>A点</rawtext>
-  <confidence>35</confidence>
+  <rawtext>去A点</rawtext>
+  <confidence>61</confidence>
   <engine>local</engine>
   <result>
-    <focus>position</focus>
-    <confidence>32</confidence>
+    <focus>action|position</focus>
+    <confidence>17|99</confidence>
     <object>
+      <action id="65535">去</action>
       <position id="0">A点</position>
     </object>
   </result>
