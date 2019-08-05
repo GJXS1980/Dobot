@@ -19,7 +19,7 @@ class XML_Analysis():
     def __init__(self):
         rospy.init_node('XML_Analysis', log_level=rospy.INFO)
         #在launch文件中获取参数
-        self.file_path = rospy.get_param("~file_path", "/home/kyle/voice_ws/src/castle_voice_system/src/c.xml")
+        self.file_path = rospy.get_param("~file_path", "/params/c.xml")
         self.speed = rospy.get_param("~speed", 0.5)
         self.pub = rospy.Publisher('/robot0/cmd_vel', Twist, queue_size = 1)
         self.sub = rospy.Subscriber('/voice/castle_xf_cmd_topic', Int32 , self.cmd_callback)

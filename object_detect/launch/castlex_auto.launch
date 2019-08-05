@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<launch>
+
+    <!-- 启动底盘  -->
+  <include file="$(find cbot_move)/launch/test.launch"/>
+
+    <!-- 启动导航  -->
+  <include file="$(find castlex_navigation)/launch/voice_nav_ws/castlex_voice_nav.launch"/>
+
+    <!-- 启动语音识别  -->
+  <include file="$(find castle_voice_system)/launch/test.launch"/>
+
+    <!-- 启动相机节点  -->
+  <include file="$(find usb_cam)/launch/usb_cam-test.launch"/>
+
+    <!-- 启动物体识别节点  -->
+    <node pkg="object_detect" name="object" type="castlex_auto.py" output="screen">   
+        <remap from="input_rgb_image" to="/usb_cam/image_raw" />      
+    </node>
+
+    <!-- 启动导航去第一个目标点  -->
+    <node pkg="diego_nav" name="diego_nav_first" type="castlex_nav_voice.py"/>   
+
+    <!-- 启动导航去第二个目标点  -->
+    <node pkg="diego_nav" name="diego_nav_scend" type="castlex_nav_voice_scend.py"/>  
+
+    <!-- 启动订阅cv_bridge_image话题  -->
+    <node name="rqt_image_view" pkg="rqt_image_view" type="rqt_image_view" args="/usb_cam/image_raw"/>
+
+    <!-- 启动机械臂驱动  -->
+  <node pkg="dobot" type="DobotServer" name="DobotServer" args="dobot" />
+
+    <!-- 启动机械臂抓取  -->
+  <!--node pkg="dobot" type="Dobot_server_pick_up" name="Dobot_server_pick_up" />
+  <node pkg="dobot" type="Dobot_client_pick_up" name="Dobot_client_pick_up" /-->
+
+    <!-- 启动机械臂放置  -->
+  <!--node pkg="dobot" type="Dobot_server_drop_off" name="Dobot_server_drop_off" />
+  <node pkg="dobot" type="Dobot_client_drop_off" name="Dobot_client_drop_off" /-->
+
+</launch>

@@ -19,7 +19,7 @@ class XML_Analysis():
     def __init__(self):
         rospy.init_node('XML_Analysis', log_level=rospy.INFO)
         #在launch文件中获取参数
-        self.file_path = rospy.get_param("~file_path", "/src/c.xml")
+        self.file_path = rospy.get_param("~file_path", "/params/c.xml")
         self.sub = rospy.Subscriber('/voice/castle_xf_cmd_topic', Int32 , self.cmd_callback)
         self.pub = rospy.Publisher('/voice/goal_point', Int32MultiArray, queue_size = 1)
         self.DOMTree = None

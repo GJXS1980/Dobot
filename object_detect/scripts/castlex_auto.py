@@ -3,14 +3,13 @@
 
 import cv2
 import numpy as np
-import math as m
 import time
 
 import rospy
 from sensor_msgs.msg import Image, RegionOfInterest
 from cv_bridge import CvBridge, CvBridgeError
 
-from object_detect.msg import object_result_msg
+from object_detect.msg import Center_msg
 from std_msgs.msg import Int64
 from std_msgs.msg import Int32MultiArray
 
@@ -30,46 +29,46 @@ class Findposition:
         # 创建图像发布话题
         self.image_pub = rospy.Publisher("cv_bridge_image", Image, queue_size=1)
         # 创建识别物体中心坐标的发布话题
-        self.pub = rospy.Publisher('object_center', object_result_msg, queue_size=10)   
+        self.pub = rospy.Publisher('object_center', Center_msg, queue_size=10)   
         
         rate = rospy.Rate(10) # 发布频率为10hz
 
         #   订阅语音识别的话题
-        rospy.Subscriber("voice/object_color", Int64, self.getColor)
+        rospy.Subscriber("voice/goal_point", Int32MultiArray, self.getColor)
         #   订阅机械臂初始化完成的话题
-        rospy.Subscriber("robotInitDone", Int64, self.getRobotInit_tag)	#	等待机械臂完成物体识别的初始状态
+        rospy.Subscriber("object_detect", Int64, self.getRobotInit_tag) #   等待机械臂完成物体识别的初始状态
 
-        self.pub1 = rospy.Publisher('DetectDone', Int64, queue_size=10)   
+        self.pub1 = rospy.Publisher('test_topic', Int64, queue_size=10)   
 
         rospy.spin()
         while not rospy.is_shutdown():
-            self.move_base.wait_for_result()
+            # self.move_base.wait_for_result()
             rospy.sleep(1)
 
     #   从语音里识别要抓取的物体的id
     def getColor(self,data):
-        self.get_color = data.data
+        self.get_color = data.data[1]
         return self.get_color
 
     #   获取机械臂是否已经到达初始化位姿
     def getRobotInit_tag(self,data):
         self.tag = data.data           
-        if self.tag == 8 and (self.get_color == 0 or self.get_color == 1 or self.get_color == 2 or self.get_color == 3 or self.get_color == 4 or self.get_color == 5):
+        if self.tag == 2:
             rospy.loginfo("object_detect is started.. \n Please subscribe the ROS image.")
             #   机械臂初始化位姿成功时，进行图像识别
-            #time.sleep(1)
             self.image_sub = rospy.Subscriber("input_rgb_image", Image, self.image_callback, queue_size=1)
             # 延时1s
             time.sleep(1)
 
             #   发布识别成功的信号
-            if self.tag1 == 2 and self.center_ob != [0, 0]:
+            if self.tag1 == 8 and self.center_ob != [0, 0]:
                 self.pub1.publish(self.tag1)
-                time.sleep(1)
+                time.sleep(2)
                 self.pub.publish(self.center_ob)
                 print(self.center_ob)
             else:
                 pass
+
         else:
             pass
 
@@ -93,15 +92,19 @@ class Findposition:
         Color = self.Get_Color(self.get_color)
 
         points = self.Find_contour_Color(morph)
-        if len(points) == 2:
-        	pass
-        else:
-        	self.px = self.pxPoint(points)
-        	mask = self.Draw_contour(points)
-        	center_x, center_y = self.Get_center(points)
-        	self.center_ob = [center_x, center_y, self.px]
-        	self.tag1 = 2
-        	self.image_pub.publish(self.bridge.cv2_to_imgmsg(self.cv_image, "bgr8"))
+        mask = self.Draw_contour(points)
+        center_x, center_y = self.Get_center(points)
+
+        self.center_ob = [center_x,center_y]
+        self.tag1 = 8
+
+        #while not rospy.is_shutdown():      #用于检测程序是否退出，是否按Ctrl-C 或其他
+            # rospy.loginfo("center is %s", center_ob)  #在屏幕输出识别的物体中心位置坐标
+        #self.pub.publish(self.center_ob)      #发布信息到主题
+        #self.pub1.publish(self.tag1)
+        self.image_pub.publish(self.bridge.cv2_to_imgmsg(self.cv_image, "bgr8"))
+
+            #rate.sleep()        #睡眠一定持续时间，如果参数为负数，睡眠会立即返回
 
     #   获取颜色的阈值范围
     def Get_Color(self, get_color):
@@ -145,7 +148,7 @@ class Findposition:
         img_cp = self.Get_contour_Color()
         _, cnts, _ = cv2.findContours(img_cp, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         if len(cnts) == 0:
-            img_boxpoints = (0, 0)
+            img_boxpoints = cnts
         else:
             cnt_second = sorted(cnts, key=cv2.contourArea, reverse=True)[0] #当没有检测到图像的时候报错，要修改
             box =cv2.minAreaRect(cnt_second)    #生成最小外接矩形
@@ -184,25 +187,6 @@ class Findposition:
         else:
             cv2.circle( mask,center,1,(255,255,255),2)
 
-
-############################    计算像素与实际距离之比     ##############################################     
-    def pxPoint(self, data):
-        st = []
-        for i in range(0, 4):
-            if i <= 2:
-                s = m.sqrt((data[i][0] - data[i+1][0])**2 + (data[i][1] - data[i+1][1])**2)
-                st = np.append(st, s)
-            else:
-                s = m.sqrt((data[i][0] - data[0][0])**2 + (data[i][1] - data[0][1])**2)
-                st = np.append(st, s)
-        sum = 0
-        for x in st:
-            sum = sum + x
-        self.s = sum/len(st)
-        # print self.s
-        return self.s
-
-
     def cleanup(self):
         print "Shutting down vision node."
         cv2.destroyAllWindows()
@@ -212,10 +196,10 @@ class Findposition:
 
 ################################################################################            
 if __name__== '__main__' :
+    # global center_x, center_y
     try:
         Findposition()
-	#rospy.spin()
     except rospy.ROSInterruptException:
         rospy.loginfo("object_detect test finished.")
-    #rospy.sleep(5)
-    #rospy.spin()
+    
+    rospy.sleep(5)

@@ -41,12 +41,12 @@ const char * ASR_RES_PATH        = path1.data(); //离线语法识别资源路�
 string BUILD_path("/bin/msc/res/asr/GrmBuilld");
 string path2 = pkg_path+BUILD_path;
 const char * GRM_BUILD_PATH      = path2.data(); //构建离线语法识别网络生成数据保存路径
-string FILE_path("/bin/object_test.bnf");
+string FILE_path("/bin/object_detect.bnf");
 string path3 = pkg_path+FILE_path;
 const char * GRM_FILE = path3.data(); //构建离线识别语法网络所用的语法文件
 const char * LEX_NAME            = "contact"; //更新离线识别语法的contact槽（语法文件为此示例中使用的call.bnf）
 
-string xml_path("/src/test.xml");
+string xml_path("/params/objectDetect.xml");
 string path4 = pkg_path+xml_path;
 const char *path = path4.data(); //XML文件地址
 
